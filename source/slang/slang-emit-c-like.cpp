@@ -5309,12 +5309,15 @@ void CLikeSourceEmitter::computeEmitActions(IRModule* module, List<EmitAction>& 
         {
             if (as<IRFunc>(inst))
             {
-                for (auto child : inst->getModifiableChildren())
+                List<IRInst*> removeList;
+                for (auto child : inst->getChildren())
                 {
-                    if (as<IRBlock>(child))
-                    {
-                        child->removeAndDeallocate();
-                    }
+                    if (as<IRBlock>(child)) 
+                        removeList.add(child);
+                }
+                for (auto child : removeList)
+                {
+                    child->removeAndDeallocate();
                 }
             }
         }
